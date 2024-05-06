@@ -1,0 +1,12 @@
+/* Login */
+.login, .register{
+    width: 400px;
+    margin: auto;
+    padding: 32px;
+    background-color: beige;
+    border-radius: 8px;
+}
+
+.register{
+    display: none;
+}

@@ -1,0 +1,99 @@
+<div class="container">
+    <br>
+    <h3>Sửa gói vay</h3>
+    <a href="/admin/loan-package" class="back" style="color: red;">Hủy & Quay lại</a>
+    <br>
+    <br>
+</div>
+<form class="admin__menu-edit container" action="/admin/loan-package/edit/{{loanPackage._id}}?_method=PUT" method="POST">
+    <div class="form-group">
+        <label for="name">Tên gói vay</label>
+        <input type="text" class="form-control" id="name" value="{{loanPackage.name}}">
+    </div>  
+    <div class="form-group">
+        <label for="type">Loại gói vay</label>
+        <input type="text" class="form-control" id="type" value="{{loanPackage.type}}">
+    </div>
+    <div class="form-group">
+        <label for="rule">Điều khoản vay</label>
+        <textarea class="form-control" id="rule" rows="5">{{loanPackage.rule}}</textarea>
+    </div>  
+    <div class="form-group">
+        <label for="interestRate">
+            Lãi xuất cho vay 
+            <b>(%)</b>
+        </label>
+        <input type="number" class="form-control" id="interestRate" min="0" max="100" step="0.1" value="{{loanPackage.interestRate}}">
+    </div>
+    <div class="form-group">
+        <label for="maximumMoney">
+            Hạn mức cho vay 
+            <b>(VNĐ)</b>
+        </label>
+        <input type="number" class="form-control" id="maximumMoney" min="1000000" step="1000000" value="{{loanPackage.maximumMoney}}">
+    </div>
+    <div class="form-group">
+        <label for="maximumTime">
+            Thời gian vay tối đa
+            <b>(năm)</b>
+        </label>
+        <input type="number" class="form-control" id="maximumTime" min="1" step="1" value="{{loanPackage.maximumTime}}">
+    </div>
+    <br>
+    <button id="admin__menu-edit-btn" class="btn btn-primary" data-id="{{loanPackage._id}}" >Sửa gói vay</button>
+</form>
+
+<br>
+<br>
+<br>
+
+
+<script>
+
+    const editButton = document.getElementById("admin__menu-edit-btn");
+
+    editButton.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        const loanPackageId = editButton.getAttribute("data-id");
+        const name = document.querySelector('#name').value.trim();
+        const type = document.querySelector('#type').value.trim();
+        const rule = document.querySelector('#rule').value.trim();
+        const interestRate = document.querySelector('#interestRate').value.trim();
+        const maximumMoney = document.querySelector('#maximumMoney').value.trim();
+        const maximumTime = document.querySelector('#maximumTime').value.trim();
+
+        if (!name || !type || !rule || !interestRate || !maximumMoney || !maximumTime) {
+            alert('Bạn hãy nhập đầy đủ các thông tin của gói vay!');
+            return; // Dừng xử lý form
+        }
+
+        fetch(`/admin/loan-package/edit/${loanPackageId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name,
+                type,
+                rule,
+                interestRate,
+                maximumMoney,
+                maximumTime
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(!data.success) {
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                    window.location.href = '/admin/loan-package';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Có lỗi xảy ra, vui lòng thử lại sau!');
+            });
+    });
+</script>

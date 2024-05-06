@@ -1,0 +1,95 @@
+<div class="admin__menu">
+    <div class="admin__menu-header">
+        <h2>Quản lý gói vay</h2>
+        <div class="admin__menu-search">
+            <input type="text" class="admin__menu-search-inp" placeholder="Nhập vào mã hoặc tên gói vay cần tìm">
+            <button class="admin__menu-search-btn">Tìm kiếm</button>
+        </div>
+        <div class="">
+            <button class="admin__menu-header-btn">
+                <a href="loan-package/add">Thêm gói vay</a>
+            </button>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Mã gói vay</th>
+                <th scope="col">Tên gói vay</th>
+                <th scope="col">Loại gói vay</th>
+                <th scope="col">Điều khoản</th>
+                <th scope="col">Lãi xuất cho vay</th>
+                <th scope="col">Hạn mức vay</th>
+                <th scope="col">Thời gian vay tối đa</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each loanPackages}}
+                <tr class="admin__menu-inf">
+                    <th scope="row">{{sum @index 1}}</th>
+                    <td class="admin__menu-id admin__menu-item">{{this.ID}}</td>
+                    <td class="admin__menu-name admin__menu-item">{{this.name}}</td>
+                    <td class="admin__menu-item">{{this.type}}</td>
+                    <td class="admin__menu-item">{{this.rule}}</td>
+                    <td class="admin__menu-item">{{this.interestRate}}  %</td>
+                    <td class="admin__menu-item">{{this.maximumMoney}} VNĐ</td>
+                    <td class="admin__menu-item">{{this.maximumTime}} năm</td>
+                    <td class="admin__menu-item">
+                        <a href="loan-package/edit/{{this._id}}" class="">Sửa</a>
+                    </td>
+                    <td class="admin__menu-item">
+                        <a href="" data-id="{{this._id}}" data-toggle="modal" data-target="#delete-product-modal">Xóa</a>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="delete-product-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa món?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Sau khi xóa thông tin sẽ không thể khôi phục!!!<br>
+        Bạn có chắc chắn muốn xóa gói vay này khỏi danh sách không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" id="btn-delete-product" >Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- delete hiden form --}}
+<form id="delete-product-form" method="POST"></form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var productId;
+        var btnDeleteProduct = document.getElementById('btn-delete-product');
+        var deleteForm = document.getElementById('delete-product-form');
+
+        //When the dialog confirm button is clicked
+        $('#delete-product-modal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            productId = button.data('id');
+            console.log(productId);  
+        });
+
+        btnDeleteProduct.onclick = function() {
+            deleteForm.action = 'loan-package/delete/' + productId + '?_method=DELETE';
+            deleteForm.submit();
+        }
+    });
+</script>
